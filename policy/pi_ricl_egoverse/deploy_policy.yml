@@ -1,0 +1,17 @@
+# RoboTwin deploy config for the EgoVerse PIRicl (pi0.5) policy.
+# Basic experiment configuration (keep unchanged)
+policy_name: null
+task_name: null
+task_config: null
+ckpt_setting: null
+seed: null
+instruction_type: unseen
+
+# EgoVerse PIRicl params (set via eval.sh overrides or here)
+egoverse_checkpoint: null # trained Lightning .ckpt
+bank_root: null # RoboTwin task dir for the retrieval demo bank
+bank_index_dir: null # consolidated DINOv2 index for bank_root
+quantiles_path: null # norm-stats JSON (RoboTwinCorpus.save_quantiles)
+k: 4
+action_horizon: 15
+pi0_step: 50
