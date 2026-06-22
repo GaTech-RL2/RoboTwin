@@ -271,9 +271,23 @@ try:
             return result_p, result_q
     
 except Exception as e:
-    print('[planner.py]: Something wrong happened when importing CuroboPlanner! Please check if Curobo is installed correctly. If the problem still exists, you can install Curobo from https://github.com/NVlabs/curobo manually.')
-    print('Exception traceback:')
-    traceback.print_exc()
+    print('[planner.py]: Curobo not available; using a no-op CuroboPlanner stub. This is fine '
+          'for JOINT-SPACE (qpos) closed-loop POLICY eval, which drives the arm via mplib TOPP '
+          'and never calls the curobo motion planner. EE/plan_path-based demo generation DOES '
+          'need a real curobo install.')
+
+    class CuroboPlanner:  # noqa: F811 - graceful fallback so robot.py can import CuroboPlanner
+        """No-op stub: lets the env import + set_planner construct without curobo. Curobo
+        planning methods (plan_path, update_point_cloud, ...) no-op; the qpos eval path never
+        calls them, so joint-space policy rollouts run unaffected."""
+
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def __getattr__(self, name):
+            def _noop(*a, **k):
+                return None
+            return _noop
 
 
 # ********************** MplibPlanner **********************
